@@ -1,0 +1,59 @@
+version: "3"
+
+services:
+  nodered:
+    image: nodered/node-red
+    deploy:
+      restart_policy:
+        condition: on-failure
+    user: '1000'
+    ports:
+    - 1880:1880
+    volumes:
+    - nodered:/data
+    networks:
+    - iot-net
+
+  influxdb:
+    image: influxdb:1.8
+    deploy:
+      restart_policy:
+        condition: on-failure
+    networks:
+    - iot-net
+    ports:
+    - 8086:8086
+    volumes:
+    - influxdb:/var/lib/influxdb
+  
+  homeassistant:
+    image: homeassistant/home-assistant:stable
+    deploy:
+      restart_policy:
+        condition: on-failure
+    volumes:
+      - homeassistant:/config
+    networks:
+      - iot-net
+    ports:
+      - 8123:8123
+    
+networks:
+    iot-net:
+
+volumes:
+    influxdb:
+      driver: azure_file
+      driver_opts:
+        share_name: influxdb
+        storage_account_name: hackaton2022storage
+    nodered:
+      driver: azure_file
+      driver_opts:
+        share_name: nodered
+        storage_account_name: hackaton2022storage
+    homeassistant:
+        driver: azure_file
+        driver_opts:
+          share_name: homeassistant
+          storage_account_name: hackaton2022storage
