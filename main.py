@@ -68,7 +68,6 @@ if not wlan.isconnected():
     wlan.connect(SSID, PASS)
     while not wlan.isconnected():
         time.sleep(0.1)
-        # TODO watchdog - request SSID and password again in case of bad login
 print('NETWORK CONFIG:\n', wlan.ifconfig())
 
 # TIME SYNCHRONIZATION
